@@ -115,9 +115,49 @@ for ax in axs.ravel():
 
 plt.show()
 ```
+### Day 3 Filter by Region
 
+```
+america_sul = df.query('Região == "América do Sul"')
+america_sul
+```
 
+```
+Order by value
+america_sul_ordenado = america_sul.sort_values('Total', ascending=False)
+or
+top_10 = df.sort_values('Total',ascending=False).head(10)
+top_10
 
+```
+```
+##Focus in one specific country##
+
+cores = []
+for pais in america_sul_ordenado.index:
+    if pais == 'Brasil':
+        cores.append('red')
+    else:
+        cores.append('silver')
+
+fig, ax = plt.subplots(figsize=(12, 5))
+ax.barh(america_sul_ordenado.index, america_sul_ordenado['Total'], color=cores)
+ax.set_title('América do Sul: Brasil foi o quarto país com mais imigrantes\npara o Canadá no período de 1980 a 2013', loc='left', fontsize=16)
+ax.set_xlabel('Número de imigrantes', fontsize=14)
+ax.set_ylabel('')
+ax.set_xlabel('Número de imigrantes', fontsize=14)
+ax.yaxis.set_tick_params(labelsize=12)
+ax.xaxis.set_tick_params(labelsize=12)
+
+for i, v in enumerate(america_sul_ordenado['Total']):
+    ax.text(v + 20, i, str(v), color='black', fontsize=10, ha='left', va='center')
+
+ax.set_frame_on(False)
+ax.get_xaxis().set_visible(False)
+ax.tick_params(axis='both',which='both',length=0)
+
+plt.show()
+```
 
 
 
