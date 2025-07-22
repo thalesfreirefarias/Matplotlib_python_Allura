@@ -129,6 +129,16 @@ or
 top_10 = df.sort_values('Total',ascending=False).head(10)
 top_10
 
+
+fig, ax = plt.subplots(figsize=(12, 5))
+sns.barplot(data=top_10,y=top_10.index,x=top_10['Total'],orient='h',palette='Blues_r',ax=ax)
+
+ax.set_title('Top 10 países com mais imigrantes para o Canadá de 1980 a 2013', loc='left', fontsize=16)
+ax.set_xlabel('Número de imigrantes', fontsize=14)
+ax.set_ylabel('')
+
+plt.show()
+
 ```
 ```
 ##Focus in one specific country##
@@ -158,12 +168,86 @@ ax.tick_params(axis='both',which='both',length=0)
 
 plt.show()
 ```
+```
+#save figure
+fig.savefig('imigracao_brasil_canada.png', transparent=False, dpi=300, bbox_inches='tight')
+```
 
 
+### Day 4 Build diferents graphs
+
+```
+fig, axs = plt.subplots(2,2, figsize=(10,6))
+fig.subplots_adjust(hspace=0.5, wspace=0.3)
+fig.suptitle('Imigração dos quatro maiores países da América do Sul para o Canadá de 1980 a 2013')
 
 
+axs[0,0].plot(df.loc['Brasil', anos])
+axs[0,0].set_title('Brasil')
+
+axs[0,1].plot(df.loc['Colômbia', anos])
+axs[0,1].set_title('Colômbia')
+
+axs[1,0].plot(df.loc['Argentina', anos])
+axs[1,0].set_title('Argentina')
+
+axs[1,1].plot(df.loc['Peru', anos])
+axs[1,1].set_title('Peru')
+
+for ax in axs.flat:
+  ax.xaxis.set_major_locator(plt.MultipleLocator(5))
+
+for ax in axs.flat:
+  ax.set_xlabel('Ano')
+  ax.set_ylabel('Número de imigrantes')
 
 
+ymin = 0
+ymax = 7000
+
+for ax in axs.ravel():
+  ax.set_ylim(ymin, ymax)
+
+plt.show()
+```
+
+```
+###Dinamic graphs
+import plotly.express as px
+figura = px.line(dados_brasil,x='Ano',y='Imigrantes', title="Imigração do Brasil para o Canadá de 1980 a 2013" )
+figura.update_traces(line_color='red',line_width=4)
+figura.update_layout(width=1000, height= 500,
+                     xaxis_title='Ano',yaxis_title='Número de imigrantes',
+                     xaxis={'tickangle':-45}, 
+                     font_family='Arial',
+                     font_size=14,font_color='grey',
+                     title_font_size=22,
+                     title_font_color='black')
+figura.show()
+
+```
+
+```
+### Clean df
+df_america_sul_clean = america_sul.drop(['Continente', 'Região', 'Total'], axis=1)
+america_sul_final = df_america_sul_clean.T
+
+america_sul_final.head()
+```
+
+```
+### Dinamic graphs with diferents countries
+import plotly.express as px
+fig = px.line(america_sul_final, x=america_sul_final.index, y=america_sul_final.columns, color='País', markers=True,
+              title='Imigração dos países da América do Sul para o Canadá de 1980 a 2013')
+fig.update_layout(
+    xaxis={'tickangle': -45},
+    xaxis_title='Ano',
+    yaxis_title='Número de imigrantes')
+
+fig.show()
+fig.write_html('imigracao_america_sul.html')
+```
 
 
 
